@@ -46,6 +46,14 @@ Die Detection und ihre 27 Unit-Tests benötigen nur die Python-Standardbibliothe
 | Triage | Notizen und Bewertung pro Befund; Export mit Lauf-ID | Befundwechsel vermischt keine Notizen |
 | Automatisierung | Ein Befehl, Prozesssperre, vorbereitete GitHub-Prüfung und Mac-Timer | Wiederholbare Prüfung ohne Endpoint-Eingriffe |
 
+## Screenshots
+
+Alle Daten sind synthetisch. Die Aufnahmen stammen aus einem früheren Stand des Dashboards und zeigen Baseline (Ausnahme aus): 3 TP, 1 FP.
+
+| Befunde und Metriken | Befund auswählen | Belege und Triage |
+|---|---|---|
+| ![Dashboard Baseline](docs/screenshots/01-dashboard-baseline.png) | ![Befundauswahl](docs/screenshots/02-alert-selection.png) | ![Belege und Triage](docs/screenshots/03-evidence-and-triage.png) |
+
 ## Ablauf
 
 ```mermaid
