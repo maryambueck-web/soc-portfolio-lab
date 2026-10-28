@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.audit-venv/
+reports/
+data/
+imports/
+exports/
+*.log
+.env
+.env.*
+.streamlit/secrets.toml

@@ -1,0 +1,24 @@
+title: Lab Encoded PowerShell Parameter
+id: 581b8bbb-396a-4e40-a1b4-6820bd65ab1b
+status: experimental
+description: Training example; requires tuning and backend validation before use.
+author: SOC Portfolio Lab
+date: 2026-10-28
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_image:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  selection_command:
+    # Same whole-switch heuristic as lab.py / defender_powershell.kql (-e ... -EncodedCommand, "-" or "/" prefix)
+    CommandLine|re: '(?i)(^|\s)['"]?[-/](e|ec|en|enc|enco|encod|encode|encoded|encodedc|encodedco|encodedcom|encodedcomm|encodedcomma|encodedcomman|encodedcommand)['"]?(\s|:)'
+  condition: selection_image and selection_command
+falsepositives:
+  - Approved administrative automation
+level: medium
+tags:
+  - attack.execution
+  - attack.t1059.001

@@ -1,0 +1,10 @@
+{
+  "id": "EX-LAB-001",
+  "owner": "Lab analyst \u2014 replace after review",
+  "reason": "Synthetic backup fixture; four-field exact match only",
+  "expires_at": "2026-11-28T00:00:00Z",
+  "device": "LAB-BACKUP01",
+  "user": "svc_backup",
+  "script_path": "C:\\Lab\\approved-backup.ps1",
+  "script_sha256": "8ca5c2d0a5b1fa61c873941efdbf68f28ae72425691888b409c41bacb501ed02"
+}

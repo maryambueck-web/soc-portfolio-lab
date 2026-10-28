@@ -1,0 +1,18 @@
+// Synthetic KQL smoke test: no real Windows events and no ingestion required.
+// Paste into an available Log Analytics / Sentinel Logs query editor.
+// Expected: exactly 2 rows (E001, E002). N001-N004 are negative controls and must NOT match.
+// Heuristic only: same switch regex as defender_powershell.kql, not a PowerShell parser.
+let EncodedSwitch = @"(?i)(^|\s)['""]?[-/](e|ec|en|enc|enco|encod|encode|encoded|encodedc|encodedco|encodedcom|encodedcomm|encodedcomma|encodedcomman|encodedcommand)['""]?(\s|:)";
+let LabEvents = datatable(EventId:string, TimeGenerated:datetime, Host:string, User:string, Image:string, CommandLine:string)
+[
+ "E001", datetime(2026-01-01T10:01:00Z), "LAB-PC01", "user01", "powershell.exe", "powershell.exe -EncodedCommand TEST_ONLY",
+ "E002", datetime(2026-01-01T10:02:00Z), "LAB-BACKUP01", "svc_backup", "powershell.exe", "powershell.exe -enc TEST_ONLY",
+ "N001", datetime(2026-01-01T10:03:00Z), "LAB-PC02", "admin01", "pwsh.exe", "pwsh.exe -Command Get-Date",
+ "N002", datetime(2026-01-01T10:04:00Z), "LAB-PC02", "admin01", "powershell.exe", "powershell.exe -ExecutionPolicy Bypass -File x.ps1",
+ "N003", datetime(2026-01-01T10:05:00Z), "LAB-PC02", "admin01", "powershell.exe", "powershell.exe -encoding UTF8 -File report.ps1",
+ "N004", datetime(2026-01-01T10:06:00Z), "LAB-PC02", "admin01", "notepad.exe", "notepad.exe -enc TEST_ONLY"
+];
+LabEvents
+| where Image in~ ("powershell.exe", "pwsh.exe")
+| where CommandLine matches regex EncodedSwitch
+| project EventId, TimeGenerated, Host, User, CommandLine

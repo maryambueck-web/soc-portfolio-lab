@@ -1,0 +1,16 @@
+// Hunting heuristic; validate in your authorized tenant before using for detection.
+// Does not decode or execute the command. Labels/backup exclusions are not imported.
+// Regex is not a PowerShell parser: quoted script contents can match; Unicode,
+// renamed binaries, other encodings and parser tricks can evade this query.
+let EncodedSwitch = @"(?i)(^|\s)['""]?[-/](e|ec|en|enc|enco|encod|encode|encoded|encodedc|encodedco|encodedcom|encodedcomm|encodedcomma|encodedcomman|encodedcommand)['""]?(\s|:)";
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| where ProcessCommandLine matches regex EncodedSwitch
+| project Timestamp, DeviceId, DeviceName, ReportId,
+          AccountDomain, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessId,
+          SHA1, SHA256
+| order by Timestamp desc
+// Evidence identity: DeviceName + Timestamp + ReportId (ReportId alone is not unique).
+// SHA256 here is the process image hash, NOT the script hash used by the lab exception.
